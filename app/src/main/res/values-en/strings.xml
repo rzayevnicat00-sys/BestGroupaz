@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">BestGroup.az</string>
+    <string name="brand_slogan">The Reliable Address for Academic and Professional Support.</string>
+    <string name="welcome_title">Welcome</string>
+    <string name="continue_label">Continue</string>
+    <string name="register">Sign up</string>
+    <string name="login">Sign in</string>
+    <string name="home">Home</string>
+    <string name="services">Services</string>
+    <string name="my_orders">My orders</string>
+    <string name="messages">Messages</string>
+    <string name="profile">Profile</string>
+    <string name="phase1_foundation">Foundation architecture prepared (Phase 1)</string>
+    <string name="phase1_note">Firebase configuration and Android build environment are required.</string>
+</resources>

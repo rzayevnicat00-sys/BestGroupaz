@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">BestGroup.az</string>
+    <string name="brand_slogan">Akademik və Peşəkar Dəstəyin Etibarlı Ünvanı.</string>
+    <string name="welcome_title">Xoş gəlmisiniz</string>
+    <string name="continue_label">Davam et</string>
+    <string name="register">Qeydiyyat</string>
+    <string name="login">Daxil ol</string>
+    <string name="home">Ana səhifə</string>
+    <string name="services">Xidmətlər</string>
+    <string name="my_orders">Sifarişlərim</string>
+    <string name="messages">Mesajlar</string>
+    <string name="profile">Profil</string>
+    <string name="phase1_foundation">Təməl arxitektura hazırlandı (Faza 1)</string>
+    <string name="phase1_note">Firebase konfiqurasiyası və Android build mühiti tələb olunur.</string>
+</resources>

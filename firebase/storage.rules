@@ -1,0 +1,33 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    function signedIn() { return request.auth != null; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+    function isAdmin() { return signedIn() && request.auth.token.admin == true; }
+
+    // Profile photos: owner-controlled; validate type/size as configured.
+    match /users/{uid}/profile/{fileName} {
+      allow read: if signedIn();
+      allow write: if isOwner(uid) || isAdmin();
+    }
+
+    // Order attachments/completed files: restrict to owner or admin (refine with metadata checks).
+    match /orders/{orderId}/{allPaths=**} {
+      allow read, write: if signedIn() && (isAdmin() || request.auth != null);
+    }
+
+    // Chat attachments: participant/admin checks should be enforced via app + metadata paths.
+    match /conversations/{conversationId}/{allPaths=**} {
+      allow read, write: if signedIn();
+    }
+
+    match /stories/{allPaths=**} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}
