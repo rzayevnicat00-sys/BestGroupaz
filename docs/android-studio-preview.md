@@ -1,50 +1,53 @@
-# Android Studio-da açmaq və önbaxış
+# Android Studio-da açmaq və önbaxış (addım-addım)
 
 ## 1) Layihəni açmaq
-1. Bu qovluğu kompüterinizə köçürün/yükləyin (məs: `BestGroupAz`).
-2. **Android Studio** → `File > Open` → `/workspace/app` kök qovluğunu seçin (`settings.gradle.kts` olan qovluq).
+1. Repo-nu klonlayın və ya ZIP kimi endirin:
+   - `git clone https://github.com/rzayevnicat00-sys/BestGroupaz.git`
+   - Branch: `kilo/woodsy-harbor-558` (Phase 1 scaffold)
+2. **Android Studio** → `File > Open` → kök qovluğu seçin (`settings.gradle.kts` olan qovluq).
 3. "Trust Project" seçin.
-4. Android Studio Gradle sync tələb edəcək.
 
 ## 2) Tələb olunan mühit
-- Android Studio (son stabil, Ladybug/Koala+ uyumlu tövsiyə olunur)
-- **JDK 17** (Android Studio bundled JBR/JDK 17 uyğun ola bilər)
-- Android SDK: **API 35** (compile/target), Build-Tools uyğun versiya
-- İnternet (Gradle, AGP, Compose, Firebase asılılıqlarını yükləmək üçün)
+- Android Studio (son stabil)
+- **JDK 17**
+- Android SDK: **API 35** (compile/target) + uyğun Build-Tools
+- İnternet (Gradle/AGP/Compose/Firebase asılılıqları üçün)
 
-## 3) Gradle Wrapper
-- Bu scaffold-da `gradle/wrapper/gradle-wrapper.properties`, `gradlew`, `gradlew.bat` var.
-- `gradle/wrapper/gradle-wrapper.jar` **daxil edilməyib** (bu mühitdə avtomatik yaradıla bilmədi).
-- Android Studio açanda sync zamanı wrapper-i bərpa/generate edə bilər; əgər tələb olunarsa:
-  - Android Studio terminalında (Gradle quraşdırılıbsa): `gradle wrapper`
-  - və ya `File > Sync Project with Gradle Files` / "Use local gradle distribution" ilə müvəqqəti sync edib sonra wrapper yaradın.
-- Gradle versiyası: **8.9** (AGP 8.7.x ilə uyğun).
+## 3) Gradle Sync / Wrapper
+- Layihədə `gradlew`, `gradlew.bat`, `gradle/wrapper/gradle-wrapper.properties` və `gradle-wrapper.jar` mövcuddur (Gradle 8.9).
+- Açdıqdan sonra `File > Sync Project with Gradle Files` edin.
+- Problem olarsa: `Settings > Build > Build Tools > Gradle` bölməsində JDK 17 və Gradle wrapper seçildiyini yoxlayın.
 
-## 4) Firebase (build/runtime üçün)
-- `app/google-services.json` **yoxdur** və repoya əlavə edilməməlidir (gitignored).
-- Firebase Console-da `az.bestgroup.app` üçün konfiqurasiya yaradıb `google-services.json` faylını `app/` qovluğuna yerləşdirin.
-- Bundan sonra `app/build.gradle.kts` daxilində Google Services plugin sətrini aktiv edin:
-  - `alias(libs.plugins.google.services)` (hazırda kommentdədir)
-- Firebase aktivləşdirmədən auth/firestore/storage/messaging real işləməyəcək; bu Phase 1 scaffold-dir.
+## 4) Firebase (real işləmə üçün, manual)
+- `app/google-services.json` yoxdur (gitignored). Firebase Console-da `az.bestgroup.app` üçün yaradıb `app/` qovluğuna yerləşdirin.
+- `app/build.gradle.kts` daxilində bu sətri aktiv edin:
+  - `alias(libs.plugins.google.services)`
+- Auth (Email/Password, Phone), Firestore, Storage, FCM, App Check aktivləşdirin; `firebase/firestore.rules`, `firebase/storage.rules`, `firebase/firestore.indexes.json` deploy edin.
+- Push bildirişləri, admin rol təyini və audit üçün Cloud Functions/Admin SDK (trusted backend) tələb olunur.
+- 5 GB yükləmə hədəfi billing/kvota və infrastrukturla ayrıca doğrulanmalıdır.
 
-## 5) Önbaxış (Preview) necə görmək
-**A. Compose Preview (kod dizaynı):**
-1. Sync uğurlu olduqdan sonra: `app/src/main/kotlin/az/bestgroup/app/core/navigation/AppNavHost.kt` və ya UI fayllarını açın.
-2. Faylın yuxarısına/səviyyəsinə `@Preview` anotasiya funksiyası əlavə edib (məs. `@Preview(showBackground = true)` + `BestGroupTheme { ... }`) sağ paneldə **Split/Design** seçin.
-3. Hazırda əsas ekranlar placeholder-dir; real dizayn Faza 2+ mərhələlərində tamamlanacaq.
+## 5) UI önizləmə (Compose Preview)
+1. Sync tamamlandıqdan sonra `app/src/main/kotlin/az/bestgroup/app/core/designsystem/component/PhasePreview.kt` faylını açın.
+2. Sağ yuxarıdan **Split** və ya **Design** seçin.
+3. `BestGroup.az - Phase 1` preview görünəcək (placeholder naviqasiya axını, Material 3 tema).
+4. İstəyə görə digər Compose fayllarında `@Preview` əlavə edib önbaxış edə bilərsiniz.
 
-**B. Emulatorda/cihazda işlətmək:**
-1. `Tools > Device Manager` → API 34/35 emulator yaradın (Play Store image tövsiyə olunur, FCM/App Check üçün).
-2. Run konfiqurasiyası: `app`.
-3. `Run > Run 'app'` (və ya ▶).
-4. Build uğurlu olarsa, Phase 1 placeholder naviqasiya ekranları görünəcək: Xoş gəlmisiniz → Auth gate scaffold → Customer/Admin scaffold.
-5. Fiziki cihaz: USB debugging aktiv edin, cihazı seçib Run edin.
+## 6) Emulatorda/cihazda işlətmək
+1. `Tools > Device Manager` → API 34/35 emulator yaradın (FCM/App Check üçün Play Store image tövsiyə).
+2. Run konfiqurasiyası: `app` → `Run > Run 'app'` (▶).
+3. **Phase 1 placeholder axını:**
+   - Xoş gəlmisiniz (`Akademik və Peşəkar Dəstəyin Etibarlı Ünvanı.`) → `Davam et`
+   - Auth gate scaffold (Daxil ol/Qeydiyyat, Faza 2 qeyd) → `Ana səhifə`
+   - Customer scaffold (Faza 3 qeyd) → `Admin scaffold`
+   - Admin scaffold (Faza 4 qeyd, qaydalarla icazə)
+4. Fiziki cihaz: USB debugging aktiv edib cihazı seçin və Run edin.
 
-**C. APK çıxarmaq (mühit hazır olduqda):**
-- Debug: `Build > Build Bundle(s) / APK(s) > Build APK(s)`
-- CLI: `./gradlew :app:assembleDebug` (`gradle-wrapper.jar` mövcud olmalıdır)
+## 7) APK yaratmaq (SDK quraşdırılmış mühitdə)
+- UI: `Build > Build Bundle(s) / APK(s) > Build APK(s)`
+- CLI: `./gradlew :app:assembleDebug`
+- Çıxış: `app/build/outputs/apk/debug/app-debug.apk`
 
-## 6) Gözlənilən məhdudiyyətlər
-- Firebase konfiqurasiyası olmadan real giriş, OTP, baza, yükləmə, bildirişlər işləməyəcək.
-- Telefon OTP, push fanout, admin rol təyini və 5 GB yükləmə hədəfi xarici konfiqurasiya/backend/billing tələb edir və hazırda tamamlanmış funksiya kimi təqdim edilmir.
-- Rəsmi BestGroup.az loqosu repoda yoxdur; placeholder launcher ikonası müvəqqətidir (orijinal loqo ilə əvəz edilməlidir, yenidən çəkilməməlidir).
+## 8) Cari məhdudiyyətlər
+- Bu repo Phase 1 scaffold-dır: real Firebase inteqrasiyası, auth/OTP, Firestore məlumatları, sifariş/mesaj/yükləmə/bildiriş/admin funksiyaları tamamlanmayıb.
+- Real telefon OTP, push fanout, admin rol təyini, 5 GB yükləmə və istehsal təhlükəsizliyi xarici konfiqurasiya/backend/billing tələb edir.
+- Rəsmi BestGroup.az loqosu daxil edilməyib; placeholder launcher ikonası orijinal loqo ilə əvəz olunmalıdır.
